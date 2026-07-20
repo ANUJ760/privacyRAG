@@ -1,0 +1,43 @@
+# Backend Framework
+fastapi
+pydantic-settings
+uvicorn[standard]
+
+# LangChain
+langchain
+langchain-community
+langchain-core
+
+# Ollama Integration
+langchain-ollama
+ollama
+
+# Vector Database
+chromadb
+
+# Embeddings
+sentence-transformers
+
+# Document Processing
+pymupdf
+python-docx
+unstructured
+
+# Text Splitting / Tokenization
+tiktoken
+
+# Data Validation
+pydantic
+pydantic-settings
+
+# File Uploads
+python-multipart
+
+# Environment Variables
+python-dotenv
+
+# HTTP Client
+httpx
+
+# Utilities
+numpy
