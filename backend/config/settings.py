@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     DEFAULT_LLM: str = "llama3.2:3b"
 
     EMBEDDING_MODEL: str = "BAAI/bge-small-en-v1.5"
-    
+
     EMBEDDING_DEVICE: str = "cpu"
 
     CHUNK_SIZE: int = 400
@@ -26,6 +26,8 @@ class Settings(BaseSettings):
     UPLOAD_DIRECTORY: Path = BASE_DIR / "storage" / "uploads"
 
     CHROMA_DIRECTORY: Path = BASE_DIR / "storage" / "chroma_db"
+
+    DEFAULT_MODEL: str = "llama3.2:3b"
 
     model_config = SettingsConfigDict(
     env_file=PROJECT_ROOT / ".env",
