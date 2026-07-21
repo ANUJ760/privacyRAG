@@ -1,4 +1,4 @@
-from langchain_core import HuggingFaceEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
 
 from backend.config.settings import settings
 
