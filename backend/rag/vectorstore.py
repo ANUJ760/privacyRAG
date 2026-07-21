@@ -32,7 +32,7 @@ class VectorStore:
 
         vectorstore = self.get_collection(collection_name)
 
-        return vectorstore.similarity_search(
+        return vectorstore.similarity_search( # similarity_search is a method of Chroma vectorstore that retrieves the top k most similar documents to the query.
             query=query,
             k=k,
         )
