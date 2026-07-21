@@ -5,10 +5,7 @@ from backend.config.settings import settings
 
 
 class DocumentSplitter:
-    """
-    Splits LangChain documents into smaller overlapping chunks.
-    """
-
+    # split the document into chunks of text with a specified chunk size and overlap.
     def __init__(self):
         self.text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=settings.CHUNK_SIZE,
@@ -24,16 +21,5 @@ class DocumentSplitter:
         )
 
     def split(self, documents: list[Document]) -> list[Document]:
-        """
-        Split documents into smaller chunks.
-
-        Parameters
-        ----------
-        documents : list[Document]
-
-        Returns
-        -------
-        list[Document]
-        """
 
         return self.text_splitter.split_documents(documents)
