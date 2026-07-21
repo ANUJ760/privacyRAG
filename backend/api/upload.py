@@ -5,6 +5,11 @@ from fastapi import APIRouter, File, HTTPException, UploadFile
 from fastapi.responses import JSONResponse
 
 from backend.config.settings import settings
+from backend.services.document_service import DocumentService
+
+from backend.utils.helpers import generate_collection_name
+
+document_service = DocumentService()
 
 router = APIRouter(
     prefix="/upload",
@@ -25,6 +30,8 @@ async def upload_document(file: UploadFile = File(...)):
     - DOCX
     - TXT
     """
+
+
 
     if not file.filename:
         raise HTTPException(
@@ -58,6 +65,14 @@ async def upload_document(file: UploadFile = File(...)):
     finally:
         await file.close()
 
+
+    collection_name = generate_collection_name(file.filename)
+
+    document_service.index_document(
+    file_path=save_path,
+    collection_name=collection_name,
+    )
+
     return JSONResponse(
         status_code=201,
         content={
@@ -65,5 +80,6 @@ async def upload_document(file: UploadFile = File(...)):
             "original_filename": file.filename,
             "stored_filename": unique_filename,
             "path": str(save_path),
+            "collection_name": collection_name,
         },
     )

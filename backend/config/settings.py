@@ -7,10 +7,6 @@ BASE_DIR = PROJECT_ROOT / "backend"
 
 
 class Settings(BaseSettings):
-    """
-    Application configuration loaded from environment variables.
-    """
-
     APP_NAME: str = "Local RAG"
 
     APP_VERSION: str = "1.0.0"
@@ -20,8 +16,10 @@ class Settings(BaseSettings):
     DEFAULT_LLM: str = "llama3.2:3b"
 
     EMBEDDING_MODEL: str = "BAAI/bge-small-en-v1.5"
+    
+    EMBEDDING_DEVICE: str = "cpu"
 
-    CHUNK_SIZE: int = 800
+    CHUNK_SIZE: int = 400
 
     CHUNK_OVERLAP: int = 150
 
