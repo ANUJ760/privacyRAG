@@ -11,6 +11,10 @@ class DocumentService:
     """
 
     def __init__(self):
+        """
+        Initialize the loader, splitter, and vector store used for indexing.
+        """
+
         self.loader = DocumentLoader()
         self.splitter = DocumentSplitter()
         self.vectorstore = VectorStore()
@@ -21,7 +25,11 @@ class DocumentService:
         collection_name: str,
     ) -> None:
         """
-        Load, split, and index a document into ChromaDB.
+        Load a document from disk, split it into chunks, and index it in ChromaDB.
+
+        Args:
+            file_path: Path to the saved document that should be indexed.
+            collection_name: Chroma collection where the chunks should be stored.
         """
 
         documents = self.loader.load(file_path)

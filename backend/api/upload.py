@@ -23,12 +23,11 @@ ALLOWED_EXTENSIONS = {".pdf", ".docx", ".txt"}
 @router.post("/")
 async def upload_document(file: UploadFile = File(...)):
     """
-    Upload a document and save it locally.
+    Save an uploaded document, index it, and return its storage metadata.
 
-    Supported formats:
-    - PDF
-    - DOCX
-    - TXT
+    The endpoint accepts PDF, DOCX, and TXT files, stores the uploaded file
+    under a generated filename, and indexes the saved document into a Chroma
+    collection derived from the original filename.
     """
 
 

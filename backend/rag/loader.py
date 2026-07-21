@@ -11,6 +11,12 @@ from langchain_community.document_loaders import (
 class DocumentLoader:
 
     def load(self, file_path: Path) -> list[Document]:
+        """
+        Load a supported document file into LangChain Document objects.
+
+        Args:
+            file_path: Path to a PDF, DOCX, or TXT file on disk.
+        """
 
         extension = file_path.suffix.lower() # file extension (.pdf, .docx, .txt, etc)
 

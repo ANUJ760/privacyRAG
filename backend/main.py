@@ -12,6 +12,10 @@ app = FastAPI(
 
 @app.get("/", tags=["Root"])
 async def root() -> dict:
+    """
+    Return basic application metadata for the root API endpoint.
+    """
+
     return {
         "application": settings.APP_NAME,
         "version": settings.APP_VERSION,
@@ -21,6 +25,10 @@ async def root() -> dict:
 
 @app.get("/health", tags=["Health"]) # health check endpoint
 async def health_check() -> dict:
+    """
+    Report whether the API process is running and able to answer requests.
+    """
+
     return {
         "status": "healthy",
     }

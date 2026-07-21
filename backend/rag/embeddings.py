@@ -7,6 +7,10 @@ from backend.config.settings import settings
 
 @lru_cache(maxsize=1) # caches the result of the function so that it is only computed once and reused on subsequent calls.
 def get_embedding_model() -> HuggingFaceEmbeddings:
+    """
+    Create and cache the Hugging Face embedding model configured for retrieval.
+    """
+
     return HuggingFaceEmbeddings(
         model_name=settings.EMBEDDING_MODEL,
         model_kwargs={

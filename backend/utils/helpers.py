@@ -3,7 +3,10 @@ import re
 
 def generate_collection_name(filename: str) -> str:
     """
-    Convert a filename into a valid Chroma collection name.
+    Build a normalized Chroma collection name from an uploaded filename.
+
+    The file extension is removed, the name is lowercased, and unsupported
+    characters are collapsed into underscores.
     """
 
     name = filename.rsplit(".", 1)[0]
