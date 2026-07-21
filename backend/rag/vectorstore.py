@@ -2,15 +2,15 @@ from langchain_community.vectorstores import Chroma
 from langchain_core.documents import Document
 
 from backend.config.settings import settings
-from backend.rag.embeddings import EmbeddingModel
+from backend.rag.embeddings import get_embedding_model
 
 
 class VectorStore:
 
     def __init__(self):
-        self.embedding_model = EmbeddingModel().get_model()
+        self.embedding_model = get_embedding_model()
 
-    def get_collection(self, collection_name: str) -> Chroma:
+    def __get_collection(self, collection_name: str) -> Chroma:
         return Chroma(
             collection_name=collection_name,
             persist_directory=str(settings.CHROMA_DIRECTORY),
@@ -18,10 +18,12 @@ class VectorStore:
         )
 
     def add_documents(self, collection_name: str, documents: list[Document]) -> None:
+        if not collection_name.strip():
+            raise ValueError("Collection name must be provided.")
 
-        vectorstore = self.get_collection(collection_name)
+        vectorstore = self.__get_collection(collection_name)
 
-        vectorstore.add_documents(documents)
+        vectorstore.add_documents(documents) # add_documents is a method of Chroma vectorstore that adds the documents to the collection.
 
     def similarity_search(
         self,
