@@ -19,7 +19,7 @@ class DocumentSplitter:
                 "",
             ],
         )
-
+    # split_documents is a in-built method of RecursiveCharacterTextSPlitter.
     def split(self, documents: list[Document]) -> list[Document]:
 
-        return self.text_splitter.split_documents(documents)
+        return self.text_splitter.split_documents(documents) 
