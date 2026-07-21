@@ -9,24 +9,8 @@ from langchain_community.document_loaders import (
 
 
 class DocumentLoader:
-    """
-    Loads supported document types into LangChain Documents.
-    """
 
     def load(self, file_path: Path) -> list[Document]:
-        """
-        Load a document from disk.
-
-        Parameters
-        ----------
-        file_path : Path
-            Path to the uploaded document.
-
-        Returns
-        -------
-        list[Document]
-            LangChain Document objects.
-        """
 
         extension = file_path.suffix.lower() # file extension (.pdf, .docx, .txt, etc)
 
