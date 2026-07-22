@@ -9,4 +9,15 @@ router = APIRouter(
 
 chat_service = ChatService()
 
+@router.post("/", response_model=ChatResponse)
+async def chat(req: ChatRequest) -> ChatResponse:
+    """
+    Query the RAG system with a question and get an answer along with sources.
+    """
+
+    try:
+        answer = chat_service.chat(req.collection_name, req.question)
+        return ChatResponse(answer=answer)
+    except Exception as error:
+        raise HTTPException(status_code=500, detail=str(error))
 

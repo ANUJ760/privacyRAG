@@ -30,4 +30,7 @@ class ChatService:
             build_user_message(context, question),
         ])
 
-        return response.content
+        return {
+            "answer": response.content,
+            "sources": documents,
+        }
