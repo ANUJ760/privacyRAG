@@ -14,7 +14,7 @@ class VectorStore:
 
         self.embedding_model = get_embedding_model()
 
-    def __get_collection(self, collection_name: str) -> Chroma:
+    def __get_collection(self, collection_name: str) -> Chroma: # private method to get a Chroma collection handle.
         """
         Create a Chroma collection handle using the configured persistence path.
 
