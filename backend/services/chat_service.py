@@ -1,11 +1,13 @@
+from langchain_core.messages import HumanMessage
+
 from backend.llm.ollama import LLMService
-from backend.prompts.rag_prompts import RAG_PROMPT
+from backend.prompts.system_prompt import SYSTEM_PROMPT
 from backend.rag.retriever import Retriever
 
 
 class ChatService:
     """
-    Handles Retrieval-Augmented Generation.
+    Handles Retrieval-Augmented Generation (RAG).
     """
 
     def __init__(self):
@@ -22,10 +24,12 @@ class ChatService:
         )
         context = "\n\n".join(document.page_content for document in documents)
 
-        prompt = RAG_PROMPT.format_messages(
-            context=context,
-            question=question,
+        user_message = HumanMessage(
+            content=f"""
+            Context:{context}
+            Question:{question}
+        """
         )
-        response = self.llm.invoke(prompt)
+        response = self.llm.invoke([SYSTEM_PROMPT, user_message])
 
         return response.content
