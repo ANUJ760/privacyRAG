@@ -2,6 +2,7 @@ from langchain_ollama import ChatOllama
 
 from backend.config.settings import settings
 
+from backend.exceptions import LLMServiceError
 
 class LLMService:
     """
@@ -9,10 +10,17 @@ class LLMService:
     """
 
     def __init__(self):
-        self._llm = ChatOllama(
-            model=settings.DEFAULT_MODEL,
-            temperature=0,
-        )
+
+        try:
+            self._llm = ChatOllama(
+                model=settings.DEFAULT_LLM,
+                temperature=0,
+            )
+
+        except Exception as error:
+            raise LLMServiceError(
+                f"Failed to initialize Ollama: {error}"
+            ) from error
 
     @property
     def llm(self) -> ChatOllama:

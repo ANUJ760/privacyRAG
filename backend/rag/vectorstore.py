@@ -1,9 +1,12 @@
+from dbm import error
+
 from langchain_community.vectorstores import Chroma
 from langchain_core.documents import Document
 
 from backend.config.settings import settings
 from backend.rag.embeddings import get_embedding_model
 
+from backend.exceptions import VectorStoreError
 
 class VectorStore:
 
@@ -59,9 +62,13 @@ class VectorStore:
             k: Maximum number of matching documents to return.
         """
 
-        vectorstore = self.get_collection(collection_name)
+        try:
+            vectorstore = self.__get_collection(collection_name)
 
-        return vectorstore.similarity_search( # similarity_search is a method of Chroma vectorstore that retrieves the top k most similar documents to the query.
-            query=query,
-            k=k,
-        )
+            return vectorstore.similarity_search(
+                query=query,
+                k=k,
+            )
+
+        except Exception as error:
+            raise VectorStoreError(str(error)) from error

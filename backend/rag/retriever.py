@@ -1,7 +1,12 @@
+from langchain_core import documents
 from langchain_core.documents import Document
 
 from backend.rag.vectorstore import VectorStore
 
+from backend.exceptions import (
+    DocumentNotFoundError,
+    VectorStoreError,
+)
 
 class Retriever:
     """
@@ -16,8 +21,15 @@ class Retriever:
         Retrieve the top-k most relevant document chunks.
         """
 
-        return self.vectorstore.similarity_search( # similarity_search is a internal method of VectorStore that performs a similarity search on the vector store and returns the top-k most relevant document chunks based on the provided query.
-            collection_name=collection_name,
-            query=query,
-            k=k,
-        )
+        documents = self.vectorstore.similarity_search(
+        collection_name=collection_name,
+        query=query,
+        k=k,
+    )
+
+        if not documents:
+            raise DocumentNotFoundError(
+                "No relevant documents were found."
+            )
+
+        return documents

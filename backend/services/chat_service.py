@@ -4,7 +4,11 @@ from backend.prompts.system_prompt import (
     build_user_message,
 )
 from backend.rag.retriever import Retriever
-
+from backend.exceptions import (
+    DocumentNotFoundError,
+    LLMServiceError,
+    VectorStoreError,
+)
 
 class ChatService:
     """
@@ -29,6 +33,11 @@ class ChatService:
             SYSTEM_PROMPT,
             build_user_message(context, question),
         ])
+
+        if response is None:
+            raise LLMServiceError(
+                "LLM returned no response."
+            )
 
         return {
             "answer": response.content,
