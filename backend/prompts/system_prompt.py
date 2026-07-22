@@ -1,3 +1,4 @@
+from langchain.messages import HumanMessage
 from langchain_core.prompts import ChatPromptTemplate
 
 
@@ -19,3 +20,15 @@ Do not make up information.
 Be concise and accurate.
 """
 )
+
+
+def build_user_message(context: str, question: str) -> HumanMessage:
+    return HumanMessage(
+        content=f"""
+Context:
+{context}
+
+Question:
+{question}
+"""
+    )

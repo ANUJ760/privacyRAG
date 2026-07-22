@@ -1,7 +1,8 @@
-from langchain_core.messages import HumanMessage
-
 from backend.llm.ollama import LLMService
-from backend.prompts.system_prompt import SYSTEM_PROMPT
+from backend.prompts.system_prompt import (
+    SYSTEM_PROMPT,
+    build_user_message,
+)
 from backend.rag.retriever import Retriever
 
 
@@ -23,13 +24,10 @@ class ChatService:
             query=question,
         )
         context = "\n\n".join(document.page_content for document in documents)
-
-        user_message = HumanMessage(
-            content=f"""
-            Context:{context}
-            Question:{question}
-        """
-        )
-        response = self.llm.invoke([SYSTEM_PROMPT, user_message])
+        
+        response = self.llm.invoke([
+            SYSTEM_PROMPT,
+            build_user_message(context, question),
+        ])
 
         return response.content
