@@ -1,5 +1,3 @@
-from dbm import error
-
 from langchain_community.vectorstores import Chroma
 from langchain_core.documents import Document
 
@@ -69,6 +67,40 @@ class VectorStore:
                 query=query,
                 k=k,
             )
+
+        except Exception as error:
+            raise VectorStoreError(str(error)) from error
+
+    def get_documents(
+        self,
+        collection_name: str,
+        limit: int = 12,
+    ) -> list[Document]:
+        """
+        Return stored chunks from a collection for document-level overview queries.
+
+        Chroma returns records in insertion order, which matches the order chunks
+        were indexed for newly uploaded documents.
+        """
+
+        try:
+            vectorstore = self.__get_collection(collection_name)
+            results = vectorstore.get(
+                limit=limit,
+                include=["documents", "metadatas"],
+            )
+
+            contents = results.get("documents") or []
+            metadatas = results.get("metadatas") or []
+
+            return [
+                Document(
+                    page_content=content,
+                    metadata=metadatas[index] if index < len(metadatas) else {},
+                )
+                for index, content in enumerate(contents)
+                if content
+            ]
 
         except Exception as error:
             raise VectorStoreError(str(error)) from error

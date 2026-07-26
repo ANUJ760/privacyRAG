@@ -1,3 +1,5 @@
+import traceback
+
 from fastapi import APIRouter, HTTPException
 
 from backend.exceptions import (
@@ -23,6 +25,7 @@ async def chat(request: ChatRequest):
         answer = chat_service.chat(
             collection_name=request.collection_name,
             question=request.question,
+            history=request.history,
         )
         return ChatResponse(answer=answer)
 
@@ -35,8 +38,9 @@ async def chat(request: ChatRequest):
     except LLMServiceError as error:
         raise HTTPException(status_code=503, detail=str(error))
 
-    except Exception:
+    except Exception as e:
+        traceback.print_exc()   # Print full traceback to terminal
         raise HTTPException(
             status_code=500,
-            detail="An unexpected error occurred.",
+            detail=str(e),
         )

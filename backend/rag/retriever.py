@@ -1,4 +1,3 @@
-from langchain_core import documents
 from langchain_core.documents import Document
 
 from backend.rag.vectorstore import VectorStore
@@ -16,7 +15,7 @@ class Retriever:
     def __init__(self):
         self.vectorstore = VectorStore()
 
-    def retrieve(self, collection_name: str, query: str, k: int = 4,) -> list[Document]:
+    def retrieve(self, collection_name: str, query: str, k: int = 4) -> list[Document]:
         """
         Retrieve the top-k most relevant document chunks.
         """
@@ -33,3 +32,59 @@ class Retriever:
             )
 
         return documents
+
+    def retrieve_for_chat(
+        self,
+        collection_name: str,
+        question: str,
+        history: list[str] | None = None,
+        k: int = 4,
+    ) -> list[Document]:
+        """
+        Retrieve chunks for a chat turn, using recent turns for follow-up context.
+        """
+
+        if self.__is_overview_question(question):
+            documents = self.vectorstore.get_documents(
+                collection_name=collection_name,
+                limit=12,
+            )
+
+            if not documents:
+                raise DocumentNotFoundError(
+                    "No relevant documents were found."
+                )
+
+            return documents
+
+        retrieval_query = question
+
+        if history:
+            recent_history = "\n".join(history[-6:])
+            retrieval_query = f"{recent_history}\nCurrent question: {question}"
+
+        return self.retrieve(
+            collection_name=collection_name,
+            query=retrieval_query,
+            k=k,
+        )
+
+    def __is_overview_question(self, question: str) -> bool:
+        normalized = " ".join(question.lower().split())
+
+        overview_phrases = (
+            "explain the file",
+            "explain this file",
+            "explain the document",
+            "explain this document",
+            "what is inside",
+            "what's inside",
+            "whats inside",
+            "what does it contain",
+            "what does this contain",
+            "summarize",
+            "summary",
+            "overview",
+        )
+
+        return any(phrase in normalized for phrase in overview_phrases)
