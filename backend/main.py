@@ -5,6 +5,8 @@ from backend.config.settings import settings
 from backend.api.chat import router as chat_router  
 from backend.api.upload import router as upload_router
 
+from fastapi.middleware.cors import CORSMiddleware
+
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -20,6 +22,15 @@ app.include_router(
     prefix=settings.API_PREFIX,
 )
 
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/", tags=["Root"])
 async def root() -> dict:
