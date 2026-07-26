@@ -45,6 +45,23 @@ class VectorStore:
 
         vectorstore.add_documents(documents) # add_documents is a method of Chroma vectorstore that adds the documents to the collection.
 
+    def clear_collection(self, collection_name: str) -> None:
+        """
+        Remove an existing collection before replacing it with a fresh upload.
+        """
+
+        if not collection_name.strip():
+            raise ValueError("Collection name must be provided.")
+
+        try:
+            vectorstore = self.__get_collection(collection_name)
+            vectorstore.delete_collection()
+
+        except Exception:
+            # Chroma raises if the collection does not exist yet. That is fine
+            # when indexing a file for the first time.
+            return
+
     def similarity_search(
         self,
         collection_name: str,

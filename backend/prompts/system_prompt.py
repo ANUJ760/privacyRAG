@@ -23,8 +23,10 @@ def build_user_message(
     context: str,
     question: str,
     history: str = "",
+    is_overview_question: bool = False,
 ) -> HumanMessage:
     history_section = ""
+    overview_instruction = ""
 
     if history:
         history_section = f"""
@@ -35,12 +37,20 @@ Use the recent conversation only to understand what the current question refers 
 Do not use it as a source of facts about the uploaded document.
 """
 
+    if is_overview_question:
+        overview_instruction = """
+The user is asking for an overview of the uploaded document.
+Summarize what the document says based on the context below.
+Do not say the information is missing if the context contains document text that can be summarized.
+"""
+
     return HumanMessage(
         content=f"""
 Context:
 {context}
 
 {history_section}
+{overview_instruction}
 Question:
 {question}
 """

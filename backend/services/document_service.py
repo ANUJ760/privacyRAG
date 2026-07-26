@@ -36,6 +36,8 @@ class DocumentService:
 
         chunks = self.splitter.split(documents)
 
+        self.vectorstore.clear_collection(collection_name)
+
         self.vectorstore.add_documents(
             collection_name=collection_name,
             documents=chunks,

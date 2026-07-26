@@ -44,7 +44,7 @@ class Retriever:
         Retrieve chunks for a chat turn, using recent turns for follow-up context.
         """
 
-        if self.__is_overview_question(question):
+        if self.is_overview_question(question):
             documents = self.vectorstore.get_documents(
                 collection_name=collection_name,
                 limit=12,
@@ -69,11 +69,20 @@ class Retriever:
             k=k,
         )
 
-    def __is_overview_question(self, question: str) -> bool:
+    def is_overview_question(self, question: str) -> bool:
         normalized = " ".join(question.lower().split())
 
         overview_phrases = (
+            "what is the file about",
+            "what is this file about",
+            "what is the document about",
+            "what is this document about",
+            "what's the file about",
+            "whats the file about",
+            "tell me about the file",
+            "tell me about this file",
             "explain the file",
+            "explain about the file",
             "explain this file",
             "explain the document",
             "explain this document",

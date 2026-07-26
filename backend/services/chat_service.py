@@ -49,6 +49,7 @@ class ChatService:
                 context=context,
                 question=question,
                 history="\n".join(history_lines),
+                is_overview_question=self.retriever.is_overview_question(question),
             ),
         ])
 
