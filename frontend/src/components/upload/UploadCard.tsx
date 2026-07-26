@@ -2,9 +2,13 @@
 
 import { useState } from "react";
 import { uploadDocument } from "@/services/upload";
+import { useDocument } from "@/providers/DocumentProviders";
 
 export default function UploadCard() {
   const [uploading, setUploading] = useState(false);
+
+  // Get both values from the context
+  const { collectionName, setCollectionName } = useDocument();
 
   async function handleChange(
     e: React.ChangeEvent<HTMLInputElement>
@@ -18,7 +22,7 @@ export default function UploadCard() {
     try {
       const response = await uploadDocument(file);
 
-      console.log(response);
+      setCollectionName(response.collection_name);
 
       alert("Upload successful!");
     } catch (err) {
@@ -38,6 +42,8 @@ export default function UploadCard() {
       />
 
       {uploading && <p>Uploading...</p>}
+
+      <p>Collection: {collectionName ?? "None"}</p>
     </div>
   );
 }
