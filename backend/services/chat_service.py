@@ -36,7 +36,7 @@ class ChatService:
             question=question,
             history=history_lines,
         )
-        context = "\n\n".join(document.page_content for document in documents)
+        context = self.__format_context(documents)
         print("=" * 50)
         print("Retrieved documents:")
         for i, doc in enumerate(documents):
@@ -61,7 +61,27 @@ class ChatService:
         print("Context sent to LLM:")
         print(context)
 
-        return response.content
+        return response.content.strip()
+
+    def __format_context(self, documents) -> str:
+        context_blocks = []
+
+        for index, document in enumerate(documents, start=1):
+            source = document.metadata.get("source") or document.metadata.get("file_path")
+            page = document.metadata.get("page")
+            source_parts = [f"Chunk {index}"]
+
+            if source:
+                source_parts.append(f"source: {source}")
+
+            if page is not None:
+                source_parts.append(f"page: {page}")
+
+            context_blocks.append(
+                f"[{'; '.join(source_parts)}]\n{document.page_content}"
+            )
+
+        return "\n\n".join(context_blocks)
 
     def __format_history(self, history: list[ChatMessage]) -> list[str]:
         formatted_history = []
