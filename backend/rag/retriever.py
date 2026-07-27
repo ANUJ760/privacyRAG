@@ -1,3 +1,5 @@
+import re
+
 from langchain_core.documents import Document
 
 from backend.rag.vectorstore import VectorStore
@@ -76,9 +78,9 @@ class Retriever:
 
         normalized = " ".join(question.lower().split())
 
-        broad_phrases = (
-            "all",
-            "any",
+        broad_patterns = (
+            r"\ball\b",
+            r"\bany\b",
             "compare",
             "comparison",
             "differences",
@@ -96,7 +98,7 @@ class Retriever:
         )
 
         return self.is_overview_question(question) or any(
-            phrase in normalized for phrase in broad_phrases
+            re.search(pattern, normalized) for pattern in broad_patterns
         )
 
     def is_overview_question(self, question: str) -> bool:

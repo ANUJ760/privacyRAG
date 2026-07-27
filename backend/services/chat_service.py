@@ -10,6 +10,7 @@ from backend.exceptions import (
     LLMServiceError,
     VectorStoreError,
 )
+from langchain_core.documents import Document
 
 class ChatService:
     """
@@ -63,12 +64,13 @@ class ChatService:
 
         return response.content.strip()
 
-    def __format_context(self, documents) -> str:
+    def __format_context(self, documents: list[Document]) -> str:
         context_blocks = []
 
         for index, document in enumerate(documents, start=1):
-            source = document.metadata.get("source") or document.metadata.get("file_path")
-            page = document.metadata.get("page")
+            metadata = document.metadata or {}
+            source = metadata.get("source") or metadata.get("file_path")
+            page = metadata.get("page")
             source_parts = [f"Chunk {index}"]
 
             if source:
