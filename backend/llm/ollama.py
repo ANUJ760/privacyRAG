@@ -13,7 +13,8 @@ class LLMService:
 
         try:
             self._llm = ChatOllama(
-                model=settings.DEFAULT_LLM,
+                model=settings.MODEL_NAME or settings.DEFAULT_LLM,
+                base_url=settings.OLLAMA_BASE_URL,
                 temperature=0,
             )
 

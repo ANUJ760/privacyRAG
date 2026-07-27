@@ -13,7 +13,13 @@ class Settings(BaseSettings):
 
     API_PREFIX: str = "/api"
 
+    MODEL_NAME: str = "llama3.2:3b"
+
     DEFAULT_LLM: str = "llama3.2:3b"
+
+    OLLAMA_BASE_URL: str = "http://localhost:11434"
+
+    LOG_LEVEL: str = "info"
 
     EMBEDDING_MODEL: str = "BAAI/bge-small-en-v1.5"
 
@@ -25,18 +31,22 @@ class Settings(BaseSettings):
 
     UPLOAD_DIRECTORY: Path = BASE_DIR / "storage" / "uploads"
 
-    CHROMA_DIRECTORY: Path = BASE_DIR / "storage" / "chroma_db"
+    CHROMA_PERSIST_DIRECTORY: Path = BASE_DIR / "storage" / "chroma_db"
 
     DEFAULT_MODEL: str = "llama3.2:3b"
 
+    @property
+    def CHROMA_DIRECTORY(self) -> Path:
+        return self.CHROMA_PERSIST_DIRECTORY
+
     model_config = SettingsConfigDict(
-    env_file=PROJECT_ROOT / ".env",
-    case_sensitive=True,
-    extra="ignore",
-)
+        env_file=PROJECT_ROOT / ".env",
+        case_sensitive=True,
+        extra="ignore",
+    )
 
 
 settings = Settings()
 
 settings.UPLOAD_DIRECTORY.mkdir(parents=True, exist_ok=True)
-settings.CHROMA_DIRECTORY.mkdir(parents=True, exist_ok=True)
+settings.CHROMA_PERSIST_DIRECTORY.mkdir(parents=True, exist_ok=True)
