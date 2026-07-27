@@ -133,6 +133,102 @@ Default frontend URL:
 http://localhost:3000
 ```
 
+## Docker Deployment
+
+This repository includes Docker deployment files for running the frontend and backend on an Azure Ubuntu VM. Ollama is not containerized; install and run Ollama directly on the VM.
+
+Docker files:
+
+- `backend/Dockerfile`
+- `backend/.dockerignore`
+- `frontend/Dockerfile`
+- `frontend/.dockerignore`
+- `docker-compose.yml`
+
+Create environment files from the samples:
+
+```bash
+cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env
+```
+
+For Azure, update the public frontend API URL before building:
+
+```bash
+export NEXT_PUBLIC_API_URL=http://<azure-vm-public-ip-or-domain>:8000/api
+```
+
+The backend reaches Ollama on the VM host through:
+
+```text
+OLLAMA_BASE_URL=http://host.docker.internal:11434
+```
+
+`docker-compose.yml` maps `host.docker.internal` to Docker's host gateway so the backend container can call the Ollama process running directly on the Azure VM.
+
+Start the stack:
+
+```bash
+docker compose up -d --build
+```
+
+Stop the stack:
+
+```bash
+docker compose down
+```
+
+ChromaDB persistence is stored in the named Docker volume `chroma_data`, mounted at:
+
+```text
+/app/backend/storage/chroma_db
+```
+
+Uploaded files are stored in the named Docker volume `upload_data`.
+
+Health checks:
+
+- Backend: `http://localhost:8000/health`
+- Frontend: `http://localhost:3000`
+
+## CI/CD
+
+GitHub Actions workflow:
+
+```text
+.github/workflows/ci-cd.yml
+```
+
+The pipeline runs on pull requests and pushes to `main` or `master`:
+
+1. Compile-check the backend.
+2. Install frontend dependencies.
+3. Run frontend lint.
+4. Build the frontend.
+5. Build backend and frontend Docker images.
+
+Optional Azure VM deployment runs on pushes to `main` or `master` when this repository variable is set:
+
+```text
+ENABLE_AZURE_DEPLOY=true
+```
+
+Required GitHub secrets for deployment:
+
+```text
+AZURE_VM_HOST       Azure VM public IP or DNS name
+AZURE_VM_USER       SSH username
+AZURE_VM_SSH_KEY    Private SSH key with access to the VM
+```
+
+Optional secret:
+
+```text
+AZURE_VM_APP_DIR    App directory on the VM, defaults to ~/privacyRAG
+```
+
+The deploy job SSHes into the VM, pulls the latest code, creates `backend/.env` from the example only if missing, rebuilds the Compose stack, starts it in detached mode, and prunes old Docker images.
+
 ## API
 
 ### Health Check
