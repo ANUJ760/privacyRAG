@@ -38,16 +38,16 @@ class Retriever:
         collection_name: str,
         question: str,
         history: list[str] | None = None,
-        k: int = 4,
+        k: int = 6,
     ) -> list[Document]:
         """
         Retrieve chunks for a chat turn, using recent turns for follow-up context.
         """
 
-        if self.is_overview_question(question):
+        if self.needs_broad_context(question):
             documents = self.vectorstore.get_documents(
                 collection_name=collection_name,
-                limit=12,
+                limit=20,
             )
 
             if not documents:
@@ -67,6 +67,36 @@ class Retriever:
             collection_name=collection_name,
             query=retrieval_query,
             k=k,
+        )
+
+    def needs_broad_context(self, question: str) -> bool:
+        """
+        Return true for questions that usually need multiple parts of a document.
+        """
+
+        normalized = " ".join(question.lower().split())
+
+        broad_phrases = (
+            "all",
+            "any",
+            "compare",
+            "comparison",
+            "differences",
+            "differentiate",
+            "extract",
+            "find every",
+            "list",
+            "main points",
+            "requirements",
+            "responsibilities",
+            "risks",
+            "table",
+            "timeline",
+            "what are the",
+        )
+
+        return self.is_overview_question(question) or any(
+            phrase in normalized for phrase in broad_phrases
         )
 
     def is_overview_question(self, question: str) -> bool:
