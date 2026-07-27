@@ -29,6 +29,14 @@ npm run lint
 npm run build
 ```
 
+## Docker
+
+The production image is built from the repository root:
+
+```bash
+docker build -f frontend/Dockerfile --build-arg NEXT_PUBLIC_API_URL=http://localhost:8000/api -t privacyrag-frontend .
+```
+
 ## UI Notes
 
 - Compact dark blue/green interface.
