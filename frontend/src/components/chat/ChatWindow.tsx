@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import ChatInput from "./ChatInput";
 import ChatMessage from "./ChatMessage";
@@ -14,6 +14,11 @@ export default function ChatWindow() {
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, loading]);
 
   async function handleSend(question: string) {
     if (!collectionName) {
@@ -51,7 +56,7 @@ export default function ChatWindow() {
         ...prev,
         {
           role: "assistant",
-          content: "Something went wrong.",
+          content: "The document answer could not be generated. Please try again.",
         },
       ]);
     } finally {
@@ -61,7 +66,14 @@ export default function ChatWindow() {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex-1 space-y-4 overflow-y-auto p-4">
+      <div className="flex-1 space-y-3 overflow-y-auto p-3">
+        {messages.length === 0 && (
+          <div className="border border-border bg-[#071827] p-3 text-[12px] text-muted-foreground">
+            Upload a PDF, then ask for summaries, clauses, lists, comparisons,
+            definitions, or document-specific follow-ups.
+          </div>
+        )}
+
         {messages.map((message, index) => (
           <ChatMessage
             key={index}
@@ -69,10 +81,19 @@ export default function ChatWindow() {
           />
         ))}
 
-        {loading && <p>Thinking...</p>}
+        {loading && (
+          <div className="mr-auto border border-border bg-[#071827] p-3 text-[12px] text-muted-foreground">
+            thinking...
+          </div>
+        )}
+
+        <div ref={scrollRef} />
       </div>
 
-      <ChatInput onSend={handleSend} />
+      <ChatInput
+        disabled={loading}
+        onSend={handleSend}
+      />
     </div>
   );
 }
