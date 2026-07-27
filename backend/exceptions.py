@@ -10,5 +10,9 @@ class LLMServiceError(Exception):
     """Raised when the LLM cannot generate a response."""
 
 
+class InvalidModelError(Exception):
+    """Raised when a requested model is not enabled."""
+
+
 class VectorStoreError(Exception):
     """Raised when a vector store operation fails."""

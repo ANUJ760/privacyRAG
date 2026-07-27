@@ -17,6 +17,8 @@ class Settings(BaseSettings):
 
     DEFAULT_LLM: str = "llama3.2:3b"
 
+    AVAILABLE_MODELS: str = ""
+
     OLLAMA_BASE_URL: str = "http://localhost:11434"
 
     LOG_LEVEL: str = "info"
@@ -38,6 +40,19 @@ class Settings(BaseSettings):
     @property
     def CHROMA_DIRECTORY(self) -> Path:
         return self.CHROMA_PERSIST_DIRECTORY
+
+    @property
+    def MODEL_OPTIONS(self) -> list[str]:
+        models = [
+            model.strip()
+            for model in self.AVAILABLE_MODELS.split(",")
+            if model.strip()
+        ]
+
+        if self.MODEL_NAME not in models:
+            models.insert(0, self.MODEL_NAME)
+
+        return models
 
     model_config = SettingsConfigDict(
         env_file=PROJECT_ROOT / ".env",

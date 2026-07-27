@@ -7,6 +7,7 @@ services:
     environment:
       OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
       MODEL_NAME: ${MODEL_NAME:-llama3.2:3b}
+      AVAILABLE_MODELS: ${AVAILABLE_MODELS:-llama3.2:3b}
       CHROMA_PERSIST_DIRECTORY: /app/backend/storage/chroma_db
       LOG_LEVEL: ${LOG_LEVEL:-info}
     extra_hosts:

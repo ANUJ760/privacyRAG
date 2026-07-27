@@ -1,5 +1,6 @@
 from langchain_core.documents import Document
 
+from backend.config.settings import settings
 from backend.llm.ollama import LLMService
 from backend.models.chat import ChatMessage
 from backend.prompts.system_prompt import (
@@ -7,7 +8,7 @@ from backend.prompts.system_prompt import (
     build_user_message,
 )
 from backend.rag.retriever import Retriever
-from backend.exceptions import LLMServiceError
+from backend.exceptions import InvalidModelError, LLMServiceError
 
 
 class ChatService:
@@ -17,17 +18,19 @@ class ChatService:
 
     def __init__(self):
         self.retriever = Retriever()
-        self.llm = LLMService().llm
+        self.llm = LLMService()
 
     def chat(
         self,
         collection_name: str,
         question: str,
         history: list[ChatMessage] | None = None,
+        model_name: str | None = None,
     ) -> str:
         """
         Answer a question using the specified document collection.
         """
+        selected_model = self.__resolve_model(model_name)
         history_lines = self.__format_history(history or [])
 
         documents = self.retriever.retrieve_for_chat(
@@ -42,15 +45,18 @@ class ChatService:
             print(f"\nDocument {i+1}")
             print(doc.page_content[:500])
         print("=" * 50)
-        response = self.llm.invoke([
-            SYSTEM_PROMPT,
-            build_user_message(
-                context=context,
-                question=question,
-                history="\n".join(history_lines),
-                is_overview_question=self.retriever.is_overview_question(question),
-            ),
-        ])
+        response = self.llm.invoke(
+            [
+                SYSTEM_PROMPT,
+                build_user_message(
+                    context=context,
+                    question=question,
+                    history="\n".join(history_lines),
+                    is_overview_question=self.retriever.is_overview_question(question),
+                ),
+            ],
+            model_name=selected_model,
+        )
 
         if response is None:
             raise LLMServiceError(
@@ -61,6 +67,22 @@ class ChatService:
         print(context)
 
         return response.content.strip()
+
+    def get_model_options(self) -> dict:
+        return {
+            "default_model": settings.MODEL_NAME,
+            "models": settings.MODEL_OPTIONS,
+        }
+
+    def __resolve_model(self, model_name: str | None) -> str:
+        selected_model = (model_name or settings.MODEL_NAME).strip()
+
+        if selected_model not in settings.MODEL_OPTIONS:
+            raise InvalidModelError(
+                f"Model '{selected_model}' is not enabled for this deployment."
+            )
+
+        return selected_model
 
     def __format_context(self, documents: list[Document]) -> str:
         context_blocks = []

@@ -66,7 +66,9 @@ frontend/
 Default backend settings:
 
 ```text
-DEFAULT_LLM=llama3.2:3b
+MODEL_NAME=llama3.2:3b
+AVAILABLE_MODELS=llama3.2:3b
+OLLAMA_BASE_URL=http://localhost:11434
 EMBEDDING_MODEL=BAAI/bge-small-en-v1.5
 EMBEDDING_DEVICE=cpu
 CHUNK_SIZE=400
@@ -163,6 +165,15 @@ The backend reaches Ollama on the VM host through:
 ```text
 OLLAMA_BASE_URL=http://host.docker.internal:11434
 ```
+
+Enable user-selectable Ollama models by listing models installed on the VM:
+
+```text
+MODEL_NAME=llama3.2:3b
+AVAILABLE_MODELS=llama3.2:3b,mistral:7b,qwen2.5:7b
+```
+
+`MODEL_NAME` is the default selected model. `AVAILABLE_MODELS` controls the models shown in the deployed UI selector.
 
 `docker-compose.yml` maps `host.docker.internal` to Docker's host gateway so the backend container can call the Ollama process running directly on the Azure VM.
 
@@ -276,7 +287,24 @@ Response:
 }
 ```
 
-### Chat
+### List Models
+
+```http
+GET /api/chat/models
+```
+
+Response:
+
+```json
+{
+  "default_model": "llama3.2:3b",
+  "models": ["llama3.2:3b", "mistral:7b"]
+}
+```
+
+The frontend uses this endpoint to populate the model selector.
+
+### Ask A Question
 
 ```http
 POST /api/chat/
@@ -288,6 +316,7 @@ Request:
 ```json
 {
   "collection_name": "document",
+  "model_name": "llama3.2:3b",
   "question": "What is the file about?",
   "history": [
     {

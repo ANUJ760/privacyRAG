@@ -6,7 +6,7 @@ import ChatInput from "./ChatInput";
 import ChatMessage from "./ChatMessage";
 
 import { Message } from "@/types/message";
-import { sendMessage } from "@/services/chat";
+import { getModelOptions, sendMessage } from "@/services/chat";
 import { useDocument } from "@/providers/DocumentProviders";
 
 export default function ChatWindow() {
@@ -14,11 +14,38 @@ export default function ChatWindow() {
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
+  const [models, setModels] = useState<string[]>([]);
+  const [selectedModel, setSelectedModel] = useState("");
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
+
+  useEffect(() => {
+    async function loadModels() {
+      try {
+        const options = await getModelOptions();
+        const savedModel = window.localStorage.getItem("privacyrag:model");
+        const model =
+          savedModel && options.models.includes(savedModel)
+            ? savedModel
+            : options.default_model;
+
+        setModels(options.models);
+        setSelectedModel(model);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    loadModels();
+  }, []);
+
+  function handleModelChange(model: string) {
+    setSelectedModel(model);
+    window.localStorage.setItem("privacyrag:model", model);
+  }
 
   async function handleSend(question: string) {
     if (!collectionName) {
@@ -41,6 +68,7 @@ export default function ChatWindow() {
         collection_name: collectionName,
         question,
         history,
+        model_name: selectedModel || undefined,
       });
 
       const assistantMessage: Message = {
@@ -66,6 +94,29 @@ export default function ChatWindow() {
 
   return (
     <div className="flex h-full flex-col">
+      <div className="flex items-center justify-between gap-3 border-b border-border bg-[#061624] px-3 py-2">
+        <span className="text-[10px] uppercase text-muted-foreground">
+          model
+        </span>
+
+        <select
+          className="min-w-0 border border-border bg-[#071827] px-2 py-1 text-[11px] text-foreground outline-none focus:border-primary"
+          disabled={loading || models.length === 0}
+          value={selectedModel}
+          onChange={(event) => handleModelChange(event.target.value)}
+        >
+          {models.length === 0 ? (
+            <option value="">loading models</option>
+          ) : (
+            models.map((model) => (
+              <option key={model} value={model}>
+                {model}
+              </option>
+            ))
+          )}
+        </select>
+      </div>
+
       <div className="flex-1 space-y-3 overflow-y-auto p-3">
         {messages.length === 0 && (
           <div className="border border-border bg-[#071827] p-3 text-[12px] text-muted-foreground">

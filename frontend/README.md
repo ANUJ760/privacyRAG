@@ -43,3 +43,4 @@ docker build -f frontend/Dockerfile --build-arg NEXT_PUBLIC_API_URL=http://local
 - Courier New monospace typography.
 - Straight, low-radius controls.
 - macOS-style red/yellow/green window dots in the header.
+- Model selector populated by the backend deployment config.
