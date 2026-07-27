@@ -4,10 +4,8 @@ from langchain_core.documents import Document
 
 from backend.rag.vectorstore import VectorStore
 
-from backend.exceptions import (
-    DocumentNotFoundError,
-    VectorStoreError,
-)
+from backend.exceptions import DocumentNotFoundError
+
 
 class Retriever:
     """
@@ -23,10 +21,10 @@ class Retriever:
         """
 
         documents = self.vectorstore.similarity_search(
-        collection_name=collection_name,
-        query=query,
-        k=k,
-    )
+            collection_name=collection_name,
+            query=query,
+            k=k,
+        )
 
         if not documents:
             raise DocumentNotFoundError(

@@ -1,3 +1,5 @@
+from langchain_core.documents import Document
+
 from backend.llm.ollama import LLMService
 from backend.models.chat import ChatMessage
 from backend.prompts.system_prompt import (
@@ -5,12 +7,8 @@ from backend.prompts.system_prompt import (
     build_user_message,
 )
 from backend.rag.retriever import Retriever
-from backend.exceptions import (
-    DocumentNotFoundError,
-    LLMServiceError,
-    VectorStoreError,
-)
-from langchain_core.documents import Document
+from backend.exceptions import LLMServiceError
+
 
 class ChatService:
     """

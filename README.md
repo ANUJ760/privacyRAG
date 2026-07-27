@@ -9,7 +9,9 @@ Local document question-answering application built with FastAPI, LangChain, Chr
 - Store embeddings in a persistent ChromaDB vector store.
 - Ask questions against the uploaded document collection.
 - Use recent chat history to resolve follow-up questions.
-- Handle broad document overview questions such as "what is the file about" and "summarize this document".
+- Handle summaries, lists, comparisons, extraction requests, timelines, and document-wide overview questions.
+- Keep answers grounded in retrieved document context and say when information is missing.
+- Use a compact dark blue/green Courier-style interface.
 
 ## Tech Stack
 
@@ -220,8 +222,9 @@ Response:
 4. Existing Chroma collections with the same generated collection name are cleared.
 5. New chunks are embedded and stored in ChromaDB under `backend/storage/chroma_db`.
 6. Chat requests retrieve relevant chunks from the selected collection.
-7. Broad overview questions retrieve document chunks directly instead of relying only on similarity search.
-8. The LLM answers using only the retrieved context.
+7. Broad document questions retrieve a larger ordered slice of the document instead of relying only on similarity search.
+8. Retrieved chunks are sent to the LLM with chunk labels and available source/page metadata.
+9. The LLM answers using only the retrieved context and clearly reports unsupported or missing details.
 
 ## Development Commands
 
@@ -229,6 +232,16 @@ Backend syntax check:
 
 ```bash
 python -m compileall backend
+```
+
+Backend smoke checks:
+
+```bash
+python tests/loader_test.py
+python tests/splitter_test.py
+python tests/vectorstore_test.py
+python tests/retriever_test.py
+python tests/llm_test.py
 ```
 
 Frontend lint:
