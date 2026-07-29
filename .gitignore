@@ -1,7 +1,40 @@
+# Environment files
 .env
+.env.*
+!.env.example
+!.env.*.example
+
+# Python
 .venv/
+venv/
 __pycache__/
 *.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
 
+# Node / frontend build output
+node_modules/
+.next/
+out/
+build/
+dist/
+coverage/
+*.tsbuildinfo
+
+# Runtime document/vector data
 backend/storage/uploads/
 backend/storage/chroma_db/
+
+# Local model artifacts
+models/*
+*.gguf
+*.safetensors
+*.pt
+*.pth
+*.onnx
+
+# Logs and OS files
+*.log
+.DS_Store
