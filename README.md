@@ -224,6 +224,20 @@ http://localhost:8000
 
 See `docs/local-device-deployment.md` for the full local-device workflow.
 
+## One Azure VM Per User
+
+For isolated hosted trials, deploy one VM per user or customer. Each VM gets its
+own Ollama runtime, uploaded files, and ChromaDB volume.
+
+```bash
+REPO_URL=<your-repo-url> \
+PUBLIC_HOST=<vm-public-ip-or-domain> \
+MODEL_NAME=llama3.2:3b \
+bash scripts/setup-azure-single-tenant-vm.sh
+```
+
+See `docs/azure-one-vm-per-user.md` for the full single-tenant Azure workflow.
+
 ## CI/CD
 
 GitHub Actions workflow:

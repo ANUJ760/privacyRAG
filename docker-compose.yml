@@ -9,6 +9,7 @@ services:
       MODEL_NAME: ${MODEL_NAME:-llama3.2:3b}
       AVAILABLE_MODELS: ${AVAILABLE_MODELS:-llama3.2:3b}
       CHROMA_PERSIST_DIRECTORY: /app/backend/storage/chroma_db
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000}
       LOG_LEVEL: ${LOG_LEVEL:-info}
     extra_hosts:
       - "host.docker.internal:host-gateway"
