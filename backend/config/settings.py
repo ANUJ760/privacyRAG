@@ -23,6 +23,8 @@ class Settings(BaseSettings):
 
     LOG_LEVEL: str = "info"
 
+    CORS_ORIGINS: str = "http://localhost:3000,http://127.0.0.1:3000"
+
     EMBEDDING_MODEL: str = "BAAI/bge-small-en-v1.5"
 
     EMBEDDING_DEVICE: str = "cpu"
@@ -53,6 +55,14 @@ class Settings(BaseSettings):
             models.insert(0, self.MODEL_NAME)
 
         return models
+
+    @property
+    def CORS_ORIGIN_LIST(self) -> list[str]:
+        return [
+            origin.strip()
+            for origin in self.CORS_ORIGINS.split(",")
+            if origin.strip()
+        ]
 
     model_config = SettingsConfigDict(
         env_file=PROJECT_ROOT / ".env",

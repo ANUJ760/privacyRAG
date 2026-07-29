@@ -202,6 +202,28 @@ Health checks:
 - Backend: `http://localhost:8000/health`
 - Frontend: `http://localhost:3000`
 
+## Local Device Deployment
+
+For stronger user privacy, run the full app on each user's own machine instead
+of a shared Azure VM. In that mode, uploaded documents, ChromaDB embeddings, and
+Ollama prompts stay on the user's device.
+
+Use:
+
+```bash
+cp .env.local.example .env
+docker compose -f docker-compose.local.yml up -d --build
+```
+
+The local Compose file binds the frontend and backend to `127.0.0.1` only:
+
+```text
+http://localhost:3000
+http://localhost:8000
+```
+
+See `docs/local-device-deployment.md` for the full local-device workflow.
+
 ## CI/CD
 
 GitHub Actions workflow:
