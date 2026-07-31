@@ -16,7 +16,6 @@ router = APIRouter(
     tags=["Upload"],
 )
 
-# Supported document types
 ALLOWED_EXTENSIONS = {".pdf", ".docx", ".txt"}
 
 
@@ -30,12 +29,10 @@ async def upload_document(file: UploadFile = File(...)):
     collection derived from the original filename.
     """
 
-
-
     if not file.filename:
         raise HTTPException(
             status_code=400,
-            detail="Filename is missing."
+            detail="Filename is missing.",
         )
 
     extension = Path(file.filename).suffix.lower()
@@ -64,12 +61,11 @@ async def upload_document(file: UploadFile = File(...)):
     finally:
         await file.close()
 
-
     collection_name = generate_collection_name(file.filename)
 
     document_service.index_document(
-    file_path=save_path,
-    collection_name=collection_name,
+        file_path=save_path,
+        collection_name=collection_name,
     )
 
     return JSONResponse(

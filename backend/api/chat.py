@@ -11,7 +11,6 @@ from backend.exceptions import (
 from backend.models.chat import ChatRequest, ChatResponse, ModelOptionsResponse
 from backend.services.chat_service import ChatService
 
-# Router for the chat endpoint, mounted under /chat and tagged "Chat".
 router = APIRouter(
     prefix="/chat",
     tags=["Chat"],
@@ -49,7 +48,7 @@ async def chat(request: ChatRequest):
         raise HTTPException(status_code=503, detail=str(error))
 
     except Exception as e:
-        traceback.print_exc()   # Print full traceback to terminal
+        traceback.print_exc()
         raise HTTPException(
             status_code=500,
             detail=str(e),
