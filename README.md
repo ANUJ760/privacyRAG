@@ -354,12 +354,5 @@ AZURE_VM_APP_DIR
 - If Docker cannot reach Ollama, confirm Ollama is running on the host and that
   `OLLAMA_BASE_URL=http://host.docker.internal:11434` is set for the container.
 
-## Public Repository Notes
 
-- Local environment files, uploaded documents, ChromaDB data, Python virtual
-  environments, Node dependencies, and build output are ignored by Git.
-- Do not commit `.env`, `frontend/.env.local`, `backend/storage/`, `.venv/`,
-  `frontend/node_modules/`, or `frontend/.next/`.
-- If real credentials were ever placed in local env files, rotate them before
-  publishing the repository.
 
