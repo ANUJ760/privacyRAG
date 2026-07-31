@@ -363,11 +363,3 @@ AZURE_VM_APP_DIR
 - If real credentials were ever placed in local env files, rotate them before
   publishing the repository.
 
-## License
-
-No open-source license file is included yet. Until a license is added, all
-rights are reserved by default.
-
-Before accepting external contributions or encouraging reuse, add a `LICENSE`
-file and update this section. MIT is a common permissive choice for small public
-projects, while Apache-2.0 adds an explicit patent grant.
