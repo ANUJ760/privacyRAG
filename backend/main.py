@@ -1,11 +1,9 @@
 from fastapi import FastAPI
-
-from backend.config.settings import settings
-
-from backend.api.chat import router as chat_router  
-from backend.api.upload import router as upload_router
-
 from fastapi.middleware.cors import CORSMiddleware
+
+from backend.api.chat import router as chat_router
+from backend.api.upload import router as upload_router
+from backend.config.settings import settings
 
 
 app = FastAPI(
@@ -22,8 +20,6 @@ app.include_router(
     prefix=settings.API_PREFIX,
 )
 
-
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.CORS_ORIGIN_LIST,
@@ -31,6 +27,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 @app.get("/", tags=["Root"])
 async def root() -> dict:
@@ -45,7 +42,7 @@ async def root() -> dict:
     }
 
 
-@app.get("/health", tags=["Health"]) # health check endpoint
+@app.get("/health", tags=["Health"])
 async def health_check() -> dict:
     """
     Report whether the API process is running and able to answer requests.
