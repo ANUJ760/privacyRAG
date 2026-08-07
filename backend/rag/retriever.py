@@ -38,7 +38,7 @@ class Retriever:
         collection_name: str,
         question: str,
         history: list[str] | None = None,
-        k: int = 6,
+        k: int = 3,
     ) -> list[Document]:
         """
         Retrieve chunks for a chat turn, using recent turns for follow-up context.

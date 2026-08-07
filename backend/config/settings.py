@@ -29,9 +29,9 @@ class Settings(BaseSettings):
 
     EMBEDDING_DEVICE: str = "cpu"
 
-    CHUNK_SIZE: int = 400
+    CHUNK_SIZE: int = 300
 
-    CHUNK_OVERLAP: int = 150
+    CHUNK_OVERLAP: int = 100
 
     UPLOAD_DIRECTORY: Path = BASE_DIR / "storage" / "uploads"
 
