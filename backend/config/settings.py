@@ -13,9 +13,9 @@ class Settings(BaseSettings):
 
     API_PREFIX: str = "/api"
 
-    MODEL_NAME: str = "llama3.2:3b"
+    MODEL_NAME: str = "llama3.2:1b"
 
-    DEFAULT_LLM: str = "llama3.2:3b"
+    DEFAULT_LLM: str = "llama3.2:1b"
 
     AVAILABLE_MODELS: str = ""
 

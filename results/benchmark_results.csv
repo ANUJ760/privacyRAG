@@ -1,21 +1,21 @@
 question,embedding_s,retrieval_s,generation_s,total_s,num_chunks_retrieved
-tell me about what is in this file,0.014,0.603,8.138,8.755,4
-summarize the contents of this file,0.019,0.044,3.125,3.188,4
-what is this document about,0.018,0.05,1.676,1.744,4
-what does this file contain,0.018,0.035,2.99,3.043,4
-give me an overview of this document,0.02,0.049,3.326,3.394,4
-list the main points in this document,0.017,0.041,3.708,3.766,4
-what are the key requirements mentioned,0.017,0.041,2.759,2.817,4
-What does section 1 of this document cover?,0.013,0.026,0.611,0.65,4
-What does section 2 of this document cover?,0.014,0.039,2.141,2.194,4
-Explain the term mentioned in the first paragraph.,0.016,0.042,1.763,1.821,4
-What is defined in the introduction?,0.017,0.042,1.698,1.757,4
-What steps are described in this document?,0.017,0.042,2.827,2.886,4
-What examples are given in this document?,0.017,0.033,1.609,1.658,4
-What conclusion does this document reach?,0.012,0.026,1.437,1.475,4
-What tools or technologies are mentioned in this document?,0.017,0.033,0.685,0.735,4
-What definitions are provided in this document?,0.02,0.057,2.205,2.283,4
-What is the purpose stated in this document?,0.014,0.035,1.593,1.643,4
-What data or figures are referenced in this document?,0.016,0.043,2.428,2.488,4
-What recommendations are made in this document?,0.017,0.042,5.763,5.821,4
-What limitations are discussed in this document?,0.017,0.048,4.015,4.08,4
+tell me about what is in this file,0.02,0.742,16.588,17.351,4
+summarize the contents of this file,0.017,0.045,1.646,1.708,4
+what is this document about,0.023,0.048,1.919,1.99,4
+what does this file contain,0.013,0.038,1.783,1.834,4
+give me an overview of this document,0.018,0.048,3.717,3.783,4
+list the main points in this document,0.013,0.03,1.442,1.485,4
+what are the key requirements mentioned,0.02,0.045,1.476,1.541,4
+What does section 1 of this document cover?,0.011,0.028,0.885,0.924,4
+What does section 2 of this document cover?,0.014,0.04,1.854,1.907,4
+Explain the term mentioned in the first paragraph.,0.013,0.027,1.074,1.115,4
+What is defined in the introduction?,0.012,0.042,2.469,2.523,4
+What steps are described in this document?,0.011,0.025,1.323,1.36,4
+What examples are given in this document?,0.013,0.029,1.047,1.089,4
+What conclusion does this document reach?,0.015,0.041,0.686,0.742,4
+What tools or technologies are mentioned in this document?,0.021,0.047,0.698,0.766,4
+What definitions are provided in this document?,0.021,0.049,1.131,1.2,4
+What is the purpose stated in this document?,0.02,0.035,1.025,1.081,4
+What data or figures are referenced in this document?,0.016,0.046,1.109,1.171,4
+What recommendations are made in this document?,0.012,0.027,3.415,3.455,4
+What limitations are discussed in this document?,0.013,0.038,1.075,1.127,4

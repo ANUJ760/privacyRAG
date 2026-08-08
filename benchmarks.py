@@ -99,7 +99,7 @@ if __name__ == "__main__":
     retriever = Retriever()
     llm_service = LLMService()
     collection_name = "a2_b3_33_dp_pract01"
-    model_name = "llama3.2"
+    model_name = "llama3.2:1b"
 
     warm_up_embedding_model()
     warm_up_model(llm_service, model_name)  # exclude client-init cost from results
@@ -113,11 +113,6 @@ if __name__ == "__main__":
         "give me an overview of this document",
         "list the main points in this document",
         "what are the key requirements mentioned",
-
-        # --- Narrow / specific questions ---
-        # TODO: replace each placeholder below with a real question about actual
-        # content in a2_b3_33_dp_pract01 (a heading, term, section number, etc.)
-        # so retrieval has something specific to match against.
         "What does section 1 of this document cover?",
         "What does section 2 of this document cover?",
         "Explain the term mentioned in the first paragraph.",
