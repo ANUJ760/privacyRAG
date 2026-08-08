@@ -39,12 +39,9 @@ class ChatService:
             history=history_lines,
         )
         context = self.__format_context(documents)
-        print("=" * 50)
-        print("Retrieved documents:")
-        for i, doc in enumerate(documents):
-            print(f"\nDocument {i+1}")
-            print(doc.page_content[:500])
-        print("=" * 50)
+
+        self.__debug_log_documents(documents)
+
         response = self.llm.invoke(
             [
                 SYSTEM_PROMPT,
@@ -63,8 +60,7 @@ class ChatService:
                 "LLM returned no response."
             )
 
-        print("Context sent to LLM:")
-        print(context)
+        self.__debug_log_context(context)
 
         return response.content.strip()
 
@@ -116,3 +112,29 @@ class ChatService:
                 formatted_history.append(f"{role}: {content}")
 
         return formatted_history
+
+    def __debug_log_documents(self, documents: list[Document]) -> None:
+        """
+        Log retrieved chunks for local debugging only. No-op unless
+        LOG_LEVEL is set to "debug", so production requests aren't
+        spammed with per-request stdout output.
+        """
+        if settings.LOG_LEVEL != "debug":
+            return
+
+        print("=" * 50)
+        print("Retrieved documents:")
+        for i, doc in enumerate(documents):
+            print(f"\nDocument {i + 1}")
+            print(doc.page_content[:500])
+        print("=" * 50)
+
+    def __debug_log_context(self, context: str) -> None:
+        """
+        Log the full context sent to the LLM for local debugging only.
+        """
+        if settings.LOG_LEVEL != "debug":
+            return
+
+        print("Context sent to LLM:")
+        print(context)

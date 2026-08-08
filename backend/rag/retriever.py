@@ -1,10 +1,41 @@
-import re
-
+import numpy as np
 from langchain_core.documents import Document
 
+from backend.rag.embeddings import get_embedding_model
 from backend.rag.vectorstore import VectorStore
 
 from backend.exceptions import DocumentNotFoundError
+
+
+OVERVIEW_EXAMPLES = (
+    "what is the file about",
+    "what is this file about",
+    "what is the document about",
+    "what is this document about",
+    "tell me about the file",
+    "tell me about this file",
+    "explain the document",
+    "explain this document",
+    "what is inside",
+    "what does it contain",
+    "summarize",
+    "summary",
+    "overview",
+    "give me the gist",
+    "walk me through this document",
+    "what's this document about in short",
+)
+
+OVERVIEW_SIMILARITY_THRESHOLD = 0.75
+
+
+def _cosine_similarity(a: list[float], b: list[float]) -> float:
+    a_arr = np.array(a)
+    b_arr = np.array(b)
+    denom = np.linalg.norm(a_arr) * np.linalg.norm(b_arr)
+    if denom == 0:
+        return 0.0
+    return float(np.dot(a_arr, b_arr) / denom)
 
 
 class Retriever:
@@ -14,6 +45,10 @@ class Retriever:
 
     def __init__(self):
         self.vectorstore = VectorStore()
+        # Computed lazily on first use, then cached for the lifetime of this
+        # Retriever instance — avoids re-embedding the same example phrases
+        # on every single chat question.
+        self._overview_example_embeddings: list[list[float]] | None = None
 
     def retrieve(self, collection_name: str, query: str, k: int = 4) -> list[Document]:
         """
@@ -69,61 +104,32 @@ class Retriever:
             k=k,
         )
 
+    def is_overview_question(self, question: str) -> bool:
+        """
+        Return true if the question semantically resembles a broad
+        "what is this document about" style request, using embedding
+        similarity rather than literal phrase matching.
+        """
+
+        if self._overview_example_embeddings is None:
+            self._overview_example_embeddings = get_embedding_model().embed_documents(
+                list(OVERVIEW_EXAMPLES)
+            )
+
+        question_embedding = get_embedding_model().embed_query(question)
+
+        similarities = [
+            _cosine_similarity(question_embedding, example_embedding)
+            for example_embedding in self._overview_example_embeddings
+        ]
+
+        return max(similarities) > OVERVIEW_SIMILARITY_THRESHOLD
+
     def needs_broad_context(self, question: str) -> bool:
         """
-        Return true for questions that usually need multiple parts of a document.
+        Return true for questions that usually need multiple parts of a document,
+        using semantic similarity against a set of known overview-style questions
+        rather than brittle literal string matching.
         """
 
-        normalized = " ".join(question.lower().split())
-
-        broad_patterns = (
-            r"\ball\b",
-            r"\bany\b",
-            "compare",
-            "comparison",
-            "differences",
-            "differentiate",
-            "extract",
-            "find every",
-            "list",
-            "main points",
-            "requirements",
-            "responsibilities",
-            "risks",
-            "table",
-            "timeline",
-            "what are the",
-        )
-
-        return self.is_overview_question(question) or any(
-            re.search(pattern, normalized) for pattern in broad_patterns
-        )
-
-    def is_overview_question(self, question: str) -> bool:
-        normalized = " ".join(question.lower().split())
-
-        overview_phrases = (
-            "what is the file about",
-            "what is this file about",
-            "what is the document about",
-            "what is this document about",
-            "what's the file about",
-            "whats the file about",
-            "tell me about the file",
-            "tell me about this file",
-            "explain the file",
-            "explain about the file",
-            "explain this file",
-            "explain the document",
-            "explain this document",
-            "what is inside",
-            "what's inside",
-            "whats inside",
-            "what does it contain",
-            "what does this contain",
-            "summarize",
-            "summary",
-            "overview",
-        )
-
-        return any(phrase in normalized for phrase in overview_phrases)
+        return self.is_overview_question(question)
